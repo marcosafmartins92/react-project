@@ -34,6 +34,10 @@ prompts.question('Qual nome do projeto que será criado?', async (answer) => {
   "presets": [
       "env",
       "react"
+  ],
+  "plugins": [
+    "@babel/plugin-proposal-class-properties",
+    "@babel/transform-runtime"
   ]
 }
       `;
@@ -83,7 +87,10 @@ ReactDOM.render(
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
-    "parcel-bundler": "^1.11.0"
+    "parcel-bundler": "^1.11.0",
+    "sass": "^1.17.0",
+    "@babel/plugin-proposal-class-properties": "^7.3.0",
+    "@babel/plugin-transform-runtime": "^7.2.0"
   }
 }`;     
 
@@ -93,9 +100,11 @@ ReactDOM.render(
     fs.writeFileSync(`${projectName}/src/base/app.js`, appStructure, (e) => console.log(e || 'Arquivo gerado com sucesso!'));
     fs.writeFileSync(`${projectName}/src/base/index.js`, indexJsStructure, (e) => console.log(e || 'Arquivo gerado com sucesso!'));
 
-    exec(`cd ${projectName} && yarn && echo "Projeto criado"`, async(error, stdout, stderr) => {
+    exec(`cd ${projectName} && echo "Aguarde, o projeto está sendo gerado" && npm i -g yarn && yarn && echo "Projeto criado"`, async(error, stdout, stderr) => {
+      if(error) {
         console.log(error)
-        await console.log(stdout)
-        process.exit();
+      }   
+      await console.log(stdout)
+      process.exit();
     }); 
 });
