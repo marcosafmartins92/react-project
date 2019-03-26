@@ -21,6 +21,7 @@ prompts.question('Qual nome do projeto que será criado?', async (answer) => {
         fs.mkdirSync(`${projectName}/src/store/reducers`);
         fs.mkdirSync(`${projectName}/src/store/actions`);
         fs.mkdirSync(`${projectName}/src/components`);
+        fs.mkdirSync(`${projectName}/src/pages`);
     }
 
     const indexHtmlSctructure = 
