@@ -36,14 +36,19 @@ prompts.question('Qual nome do projeto que será criado?', async (answer) => {
     const babelStructure = 
     `{
   "presets": [
-      "react"
+    "@babel/preset-react",
+    "@babel/preset-env"
   ],
+  "env": {
+    "development": {
+      "presets": [["@babel/preset-react", { "development": true }]]
+    }
+  },
   "plugins": [
     "@babel/plugin-proposal-class-properties",
     "@babel/transform-runtime"
   ]
-}
-      `;
+}`;
 
     const appStructure =
         `import React from 'react'
