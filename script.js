@@ -16,15 +16,19 @@ prompts.question('Qual nome do projeto que será criado?', async (answer) => {
     if (!fs.existsSync(projectName)) {
         fs.mkdirSync(projectName);
         fs.mkdirSync(`${projectName}/src`);
-        fs.mkdirSync(`${projectName}/src/base`);
-        fs.mkdirSync(`${projectName}/src/shared`);
+        fs.mkdirSync(`${projectName}/src/store`);
+        fs.mkdirSync(`${projectName}/src/routes`);
+        fs.mkdirSync(`${projectName}/src/store/reducers`);
+        fs.mkdirSync(`${projectName}/src/store/actions`);
+        fs.mkdirSync(`${projectName}/src/components`);
     }
 
     const indexHtmlSctructure = 
     `<html>
   <body>
     <div id="root"></div>
-    <script src="./src/base/index.js"></script>
+    <script src="./src/index.js"></script>
+    <link rel="manifest" href="manifest.webmanifest" data-parceljs-ignore>
   </body>
 </html>
     `;
@@ -45,29 +49,60 @@ prompts.question('Qual nome do projeto que será criado?', async (answer) => {
     const appStructure =
         `import React from 'react'
 import ReactDOM from 'react-dom'
+import { Provider } from 'react-redux'
+import Redux from 'redux'
+import Router from './routes'
 
 class App extends React.Component {
-    constructor() {
-        super()
-    }
+  constructor() {
+      super()
+  }
 
-    render() {
-        return (
-            <h1>Olá mundo</h1>
-        )
-    }
+  render() {
+    return (
+      <>  
+      <h1>Olá mundo</h1>
+      <Provider store={store}> 
+        <Router />
+      </Provider>
+      </>
+    )
+  }
 }
 
 export default App;`;
 
-    const indexJsStructure = 
-        `import React from 'react'
+  const routeStructure = `import React, { Component } from 'react';
+
+  import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+  
+  const routes = [
+//    { path: '/example', component: example },
+  ];
+  
+  
+  const Router = () => (
+    <Router>
+      <Switch>
+        {
+          routes.map(({component, path}) => (
+            <Route key={path} path={path} component={component} />
+          ))
+        }
+      </Switch>
+    </Router>
+  )
+  
+  export default QuizziRouter;
+  `;
+
+  const indexJsStructure = `import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './app'
 
 ReactDOM.render(
-    <App></App>,
-    document.getElementById('root')
+  <App></App>,
+  document.getElementById('root')
 )`;
 
     const packageStructure = 
@@ -75,13 +110,18 @@ ReactDOM.render(
   "name": "${projectName}",
   "version": "1.0.0",
   "main": "index.js",
+  "author": "Atlas Inovações",
   "license": "MIT",
   "scripts": {
-    "start": "parcel index.html"
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
   },
   "dependencies": {
-    "react": "^16.8.3",
-    "react-dom": "^16.8.3"
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
+    "react-redux": "^6.0.1",
+    "react-router-dom": "^4.3.1",
+    "redux": "^4.0.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
@@ -92,19 +132,69 @@ ReactDOM.render(
     "@babel/plugin-proposal-class-properties": "^7.3.0",
     "@babel/plugin-transform-runtime": "^7.2.0"
   }
-}`;     
+}`;  
 
-    fs.writeFileSync(`${projectName}/index.html`, indexHtmlSctructure, (e) => console.log(e || 'Arquivo gerado com sucesso!'));
-    fs.writeFileSync(`${projectName}/package.json`, packageStructure, (e) => console.log(e || 'Arquivo gerado com sucesso!'));
-    fs.writeFileSync(`${projectName}/.babelrc`, babelStructure, (e) => console.log(e || 'Arquivo gerado com sucesso!'));
-    fs.writeFileSync(`${projectName}/src/base/app.js`, appStructure, (e) => console.log(e || 'Arquivo gerado com sucesso!'));
-    fs.writeFileSync(`${projectName}/src/base/index.js`, indexJsStructure, (e) => console.log(e || 'Arquivo gerado com sucesso!'));
+  const manifestStructure = `{
+    "short_name": "${projectName}",
+    "name": "${projectName}",
+    "start_url": "/",
+    "display": "standalone"
+}`;
 
-    exec(`cd ${projectName} && echo "Aguarde, o projeto está sendo gerado" && npm i -g yarn && yarn && echo "Projeto criado"`, async(error, stdout, stderr) => {
-      if(error) {
-        console.log(error)
-      }   
-      await console.log(stdout)
-      process.exit();
-    }); 
+  const storeStructure = `import { createStore } from 'redux'
+import rootReducer from './reducers'
+
+const store = createStore(rootReducer)
+
+export default store;`;
+
+
+  const reducerStructure= `import {combineReducers} from 'redux'
+  import {exampleReducer} from './example'
+  
+  const rootReducer = combineReducers({
+    exampleReducer,
+  })
+  
+  export default rootReducer`;
+
+
+  const actionExampleStructure=`export function actionExample(data) {
+  return {
+    type: 'EXAMPLE_CODE',
+    data
+  }
+}`;
+
+  const reducerExampleStructure =`const INITIAL = {
+  data: 'Início'
+}
+
+export function exampleReducer(state = INITIAL, action) {
+    if(action.type === 'EXAMPLE_CODE') {
+        const updatedData = {data: action.data};
+        return {...state, ...updatedData}
+    }
+    return state;
+}`;
+
+  fs.writeFileSync(`${projectName}/index.html`, indexHtmlSctructure, (e) => console.log(e || 'Arquivo gerado com sucesso!'));
+  fs.writeFileSync(`${projectName}/manifest.webmanifest`, manifestStructure, (e) => console.log(e || 'Arquivo gerado com sucesso!'));
+  fs.writeFileSync(`${projectName}/package.json`, packageStructure, (e) => console.log(e || 'Arquivo gerado com sucesso!'));
+  fs.writeFileSync(`${projectName}/.babelrc`, babelStructure, (e) => console.log(e || 'Arquivo gerado com sucesso!'));
+  fs.writeFileSync(`${projectName}/src/app.js`, appStructure, (e) => console.log(e || 'Arquivo gerado com sucesso!'));
+  fs.writeFileSync(`${projectName}/src/index.js`, indexJsStructure, (e) => console.log(e || 'Arquivo gerado com sucesso!'));
+  fs.writeFileSync(`${projectName}/src/routes/index.js`, routeStructure, (e) => console.log(e || 'Arquivo gerado com sucesso!'));
+  fs.writeFileSync(`${projectName}/src/store/index.js`, storeStructure, (e) => console.log(e || 'Arquivo gerado com sucesso!'));
+  fs.writeFileSync(`${projectName}/src/store/reducers/index.js`, reducerStructure, (e) => console.log(e || 'Arquivo gerado com sucesso!'));
+  fs.writeFileSync(`${projectName}/src/store/reducers/example.js`, reducerExampleStructure, (e) => console.log(e || 'Arquivo gerado com sucesso!'));
+  fs.writeFileSync(`${projectName}/src/store/actions/example.js`, actionExampleStructure, (e) => console.log(e || 'Arquivo gerado com sucesso!'));
+
+  exec(`cd ${projectName} && echo "Aguarde, o projeto está sendo gerado" && npm i -g yarn && yarn && echo "Projeto criado"`, async(error, stdout, stderr) => {
+    if(error) {
+      console.log(error)
+    }   
+    await console.log(stdout)
+    process.exit();
+  }); 
 });
