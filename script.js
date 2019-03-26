@@ -129,7 +129,7 @@ ReactDOM.render(
     "@babel/plugin-transform-runtime": "^7.2.0",
     "@babel/preset-react": "^7.0.0",
     "parcel-bundler": "^1.11.0",
-    "sass": "^1.17.2",
+    "sass": "^1.17.2"
   }
 }`;  
 
