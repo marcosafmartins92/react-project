@@ -36,7 +36,6 @@ prompts.question('Qual nome do projeto que será criado?', async (answer) => {
     const babelStructure = 
     `{
   "presets": [
-      "env",
       "react"
   ],
   "plugins": [
@@ -52,6 +51,7 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import Redux from 'redux'
 import Router from './routes'
+import store from './store'
 
 class App extends React.Component {
   constructor() {
@@ -74,7 +74,7 @@ export default App;`;
 
   const routeStructure = `import React, { Component } from 'react';
 
-  import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+  import { BrowserRouter, Route, Switch } from 'react-router-dom'
   
   const routes = [
 //    { path: '/example', component: example },
@@ -82,7 +82,7 @@ export default App;`;
   
   
   const Router = () => (
-    <Router>
+    <BrowserRouter>
       <Switch>
         {
           routes.map(({component, path}) => (
@@ -90,10 +90,10 @@ export default App;`;
           ))
         }
       </Switch>
-    </Router>
+    </BrowserRouter>
   )
   
-  export default QuizziRouter;
+  export default Router;
   `;
 
   const indexJsStructure = `import React from 'react'
@@ -130,7 +130,6 @@ ReactDOM.render(
     "@babel/preset-react": "^7.0.0",
     "parcel-bundler": "^1.11.0",
     "sass": "^1.17.2",
-    "babel-preset-env": "^1.7.0"
   }
 }`;  
 
