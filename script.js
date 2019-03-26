@@ -124,13 +124,13 @@ ReactDOM.render(
     "redux": "^4.0.1"
   },
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
-    "parcel-bundler": "^1.11.0",
-    "sass": "^1.17.0",
+    "@babel/core": "^7.2.2",
     "@babel/plugin-proposal-class-properties": "^7.3.0",
-    "@babel/plugin-transform-runtime": "^7.2.0"
+    "@babel/plugin-transform-runtime": "^7.2.0",
+    "@babel/preset-react": "^7.0.0",
+    "parcel-bundler": "^1.11.0",
+    "sass": "^1.17.2"
+    "babel-preset-env": "^1.7.0",
   }
 }`;  
 
