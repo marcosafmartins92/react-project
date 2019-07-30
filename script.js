@@ -23,6 +23,8 @@ prompts.question('Qual nome do projeto que será criado?', async (answer) => {
         fs.mkdirSync(`${projectName}/src/store/actions`);
         fs.mkdirSync(`${projectName}/src/components`);
         fs.mkdirSync(`${projectName}/src/pages`);
+        fs.mkdirSync(`${projectName}/src/services`);
+        fs.mkdirSync(`${projectName}/src/utils`);
         fs.mkdirSync(`${projectName}/assets`);
         fs.mkdirSync(`${projectName}/assets/fonts`);
         fs.mkdirSync(`${projectName}/assets/svgs`);
